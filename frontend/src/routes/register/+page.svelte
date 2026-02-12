@@ -1,4 +1,3 @@
-<!-- src/routes/register/+page.svelte -->
 <script>
   import { register, storeToken } from '$lib/auth.js';
   import { goto } from '$app/navigation';
@@ -51,8 +50,8 @@
 
     try {
       const response = await register({ email, username, password });
-      storeToken(response.token); // Assumes response has { token }
-      goto('/home'); // Redirect to home after success
+      storeToken(response.token);
+      goto('/home');
     } catch (err) {
       errorMessage = err.message || 'Registration failed';
     }
