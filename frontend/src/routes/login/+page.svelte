@@ -1,44 +1,32 @@
-<!-- src/routes/login/+page.svelte -->
 <script>
   import { login, storeToken } from '$lib/auth.js';
   import { goto } from '$app/navigation';
-
-  let email = '';
+  let usernameOrEmail = '';
   let password = '';
   let errorMessage = '';
-
-  let emailError = '';
+  let usernameOrEmailError = '';
   let passwordError = '';
-
   function validate() {
     let valid = true;
-    emailError = '';
+    usernameOrEmailError = '';
     passwordError = '';
-
-    if (!email) {
-      emailError = 'Email is required';
-      valid = false;
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      emailError = 'Invalid email format';
+    if (!usernameOrEmail) {
+      usernameOrEmailError = 'Username or Email is required';
       valid = false;
     }
-
     if (!password) {
       passwordError = 'Password is required';
       valid = false;
     }
-
     return valid;
   }
-
   async function handleSubmit() {
     errorMessage = '';
     if (!validate()) return;
-
     try {
-      const response = await login({ email, password }); // Assumes login with email/password; adjust if username
-      storeToken(response.token); // Assumes response has { token }
-      goto('/home'); // Redirect to home after success
+      const response = await login({ usernameOrEmail, password });
+      storeToken(response.token);
+      goto('/home');
     } catch (err) {
       errorMessage = err.message || 'Login failed';
     }
@@ -49,9 +37,9 @@
   <h1>Login</h1>
   <form on:submit|preventDefault={handleSubmit}>
     <div>
-      <label for="email">Email</label>
-      <input type="email" id="email" bind:value={email} />
-      {#if emailError}<p class="error">{emailError}</p>{/if}
+      <label for="usernameOrEmail">Username or Email</label>
+      <input type="text" id="usernameOrEmail" bind:value={usernameOrEmail} />
+      {#if usernameOrEmailError}<p class="error">{usernameOrEmailError}</p>{/if}
     </div>
     <div>
       <label for="password">Password</label>
