@@ -21,3 +21,20 @@ export async function apiFetch(endpoint, method = 'GET', body = null, token = nu
   }
   return response.json();
 }
+
+export async function apiUpload(endpoint, formData, token = null) {
+  const headers = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  const response = await fetch(`${apiBaseUrl}${endpoint}`, {
+    method: 'POST',
+    headers,
+    body: formData
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'API request failed');
+  }
+  return response.json();
+}
